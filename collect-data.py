@@ -8,7 +8,7 @@ from tqdm import tqdm
 import utils
 
 url = "https://chemrxiv.org/engage/chemrxiv/public-api/v1/items"
-save_directory = './Chemrxiv_meta_data'
+save_directory = './ChemRxiv_meta_data'
 params_term = ['protein', 'biochemistry', 'peptides', 'enzymes', 'amino acids', 'biomolecules', 'proteinomics', 'chemical biology', 'macromolecules', 'biopolymers']
 
 # データを取得する範囲の開始日
@@ -29,6 +29,7 @@ save_total_num = 0
 for term in params_term:
 
     term_data_list = []
+    term_get_data_num = []
    
     progress_bar = tqdm(date_list, desc=f"Term: {term}")
     for date in progress_bar:
@@ -46,6 +47,8 @@ for term in params_term:
         if response.status_code == 200:
             data = response.json()
 
+            term_get_data_num.append(len(data['itemHits']))
+
             for i, item_hit in enumerate(data['itemHits']):
                 filename = item_hit['item']['doi'].replace("/", "-")
 
@@ -58,13 +61,19 @@ for term in params_term:
                         # JSON形式で保存
                         json.dump(item_hit, f, indent=4)
                     save_total_num += 1
-                
-                progress_bar.set_postfix({"get_data": len(data['itemHits']), "save_total_num": save_total_num})
         else:
             print(f"error >> term: {term} searchDateFrom: {date.strftime('%Y-%m-%d')}")  
+        
+        progress_bar.set_postfix({"get_data": len(data['itemHits']), "save_total_num": save_total_num})
 
     data_dict[term] = term_data_list
+    
+    
 
-with open(os.path.join("collect-data_result.json"), 'w') as f:
+    with open(os.path.join(f"collect-data_result_{term}.json"), 'w') as f:
+        # JSON形式で保存
+        json.dump({"term_data_list": term_data_list, "term_get_data_num": term_get_data_num}, f, indent=4)
+
+with open(os.path.join("collect-data_results.json"), 'w') as f:
     # JSON形式で保存
     json.dump(data_dict, f, indent=4)
