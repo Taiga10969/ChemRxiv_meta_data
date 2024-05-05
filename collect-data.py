@@ -50,7 +50,7 @@ for term in params_term:
             term_get_data_num.append(len(data['itemHits']))
 
             for i, item_hit in enumerate(data['itemHits']):
-                filename = item_hit['item']['doi'].replace("/", "-")
+                filename = item_hit['item']['doi'].split("/")[-1]
 
                 if filename not in term_data_list:
                     term_data_list.append(filename)
