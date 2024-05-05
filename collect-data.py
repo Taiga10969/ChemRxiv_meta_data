@@ -14,7 +14,7 @@ params_term = ['protein', 'biochemistry', 'peptides', 'enzymes', 'amino acids', 
 # データを取得する範囲の開始日
 start_date = datetime.datetime.strptime("2017-08-14", "%Y-%m-%d")
 # データを取得する範囲の終了日
-end_date = datetime.datetime.strptime("2023-05-05", "%Y-%m-%d")
+end_date = datetime.datetime.strptime("2024-05-04", "%Y-%m-%d")
 # 検索間隔（1日ごと）
 delta = datetime.timedelta(days=1)
 date_list = [start_date + datetime.timedelta(days=x) for x in range((end_date - start_date).days)]
